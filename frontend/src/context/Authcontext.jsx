@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, { createContext, useEffect, useReducer } from "react";
 
-// Define your initial state and reducer function
 const initialState = {
   user:
     localStorage.getItem("user") !== undefined
@@ -41,12 +40,11 @@ export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
-    // Update localStorage when the user or token changes
     localStorage.setItem("user", JSON.stringify(state.user));
     localStorage.setItem("token", state.token);
     localStorage.setItem("role", state.role);
-    // Add more conditions if needed
   }, [state]);
+
   return (
     <AuthContext.Provider
       value={{

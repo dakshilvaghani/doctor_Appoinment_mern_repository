@@ -13,10 +13,6 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 8000;
 
-const corsOptions = {
-  origin: true,
-};
-
 // database connection
 mongoose.set("strictQuery", false);
 
@@ -34,6 +30,10 @@ const connectDB = async () => {
 };
 
 //middelware
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true, // Enable cookies across different domains
+};
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
@@ -42,10 +42,10 @@ app.use("/api/v1/users", userRoute);
 app.use("/api/v1/doctors", doctorRoute);
 app.use("/api/v1/reviews", reviewRoute);
 
-app.get("/", (req, res) => {
-  // Handle your request here
-  res.send("Hello, World!");
-});
+// app.get("/", (req, res) => {
+//   // Handle your request here
+//   res.send("Hello, World!");
+// });
 
 app.listen(port, () => {
   // Call the connectDB function

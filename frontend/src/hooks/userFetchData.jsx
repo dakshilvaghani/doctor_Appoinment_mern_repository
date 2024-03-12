@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { token } from "../config";
 
-const useFetchData = (url) => {
+const useGetProfile = (url) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -13,27 +13,28 @@ const useFetchData = (url) => {
       try {
         const response = await fetch(url, {
           headers: {
-            Authorization: `Bearer ${token}`, // Make sure to define token
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        const result = await response.json();
-
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Network response was not ok");
         }
 
+        const result = await response.json();
         setData(result.data);
       } catch (error) {
+        setError(error.message || "An error occurred while fetching data");
+      } finally {
         setLoading(false);
-        setError(error.message);
       }
     };
 
     fetchData();
-  }, [url]); // Make sure to include token in the dependency array if used
+  }, [url]);
 
   return { data, loading, error };
 };
 
-export default useFetchData;
+export default useGetProfile;
