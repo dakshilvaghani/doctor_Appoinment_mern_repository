@@ -1,9 +1,8 @@
-import React from "react";
-import logo from "../../assets/images/logo.png";
-import userImg from "../../assets/images/doctor-img01.png";
+import React, { useEffect, useRef, useContext } from "react";
 import { NavLink, Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
 import { BiMenu } from "react-icons/bi";
+import { AuthContext } from "../../context/Authcontext";
+import logo from "../../assets/images/logo.png";
 
 const navLinks = [
   {
@@ -27,25 +26,36 @@ const navLinks = [
 const Header = () => {
   const headerRef = useRef(null);
   const menuRef = useRef(null);
+  const { user, role, token } = useContext(AuthContext);
 
   const handleStickyHeader = () => {
-    window.addEventListener("scroll", () => {
-      if (
-        document.body.scrollTop > 80 ||
-        document.documentElement.scrollTop > 80
-      ) {
-        headerRef.current.classList.add("sticky_header");
-      } else {
-        headerRef.current.classList.remove("sticky_header");
+    window.onscroll = () => {
+      if (headerRef.current) {
+        if (
+          document.body.scrollTop > 80 ||
+          document.documentElement.scrollTop > 80
+        ) {
+          headerRef.current.classList.add("sticky_header");
+        } else {
+          headerRef.current.classList.remove("sticky_header");
+        }
       }
-    });
+    };
   };
+
+  const toggleMenu = () => {
+    if (menuRef.current) {
+      menuRef.current.classList.toggle("show_menu");
+    }
+  };
+
   useEffect(() => {
     handleStickyHeader();
-    return () => window.removeEventListener("scroll", handleStickyHeader);
-  });
 
-  const toggleMenu = () => menuRef.current.classList.toggle("show_menu");
+    return () => {
+      window.onscroll = null; // Remove the scroll event listener on unmount
+    };
+  }, []);
 
   return (
     <header className="header flex items-center" ref={headerRef}>
@@ -63,11 +73,8 @@ const Header = () => {
                 <li key={index}>
                   <NavLink
                     to={link.path}
-                    className={(navClass) =>
-                      navClass.isActive
-                        ? "text-primaryColor text-[16px] leading-7 font-[600]"
-                        : "text-textColor text-[16px] leading-7 font-[500] hover:text-primaryColor"
-                    }
+                    className="text-textColor text-[16px] leading-7 font-[500] hover:text-primaryColor"
+                    activeclassname="text-primaryColor text-[16px] leading-7 font-[600]"
                   >
                     {link.display}
                   </NavLink>
@@ -75,20 +82,37 @@ const Header = () => {
               ))}
             </ul>
           </div>
-          {/* nav right */}
+
+          {/* Nav right */}
           <div className="flex items-center gap-4">
-            <div className="hidden">
-              <Link to="/">
-                <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
-                  <img src={userImg} className="w-full rounded-full" alt="" />
-                </figure>
+            {token && user ? (
+              <div>
+                <Link
+                  to={`${
+                    role === "doctor"
+                      ? "/doctors/profile/me"
+                      : "/users/profile/me"
+                  }`}
+                >
+                  <figure className="w-[35px] h-[35px] rounded-full cursor-pointer">
+                    <img
+                      src={user?.photo}
+                      className="w-full rounded-full"
+                      alt=""
+                    />
+                  </figure>
+                </Link>
+              </div>
+            ) : (
+              <Link to="/login">
+                <button className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px] ">
+                  Login
+                </button>
               </Link>
-            </div>
-            <Link to="/login">
-              <button className="bg-primaryColor py-2 px-6 text-white font-[600] h-[44px] flex items-center justify-center rounded-[50px]">
-                Login
-              </button>
-            </Link>
+            )}
+
+            <h1>{user?.name}</h1>
+
             <span className="md:hidden" onClick={toggleMenu}>
               <BiMenu className="w-6 h-6 cursor-pointer" />
             </span>
