@@ -36,7 +36,9 @@ const Home = () => {
                   AAAAAAAAAA aut quia earum amet architecto, modi odio. Soluta
                   unde wwwww ducimus perferendis?
                 </p>
-                <button className="btn">Request an Appointment</button>
+                <button className="btn mt-[38px]">
+                  Request an Appointment
+                </button>
               </div>
 
               {/* hero counter */}
@@ -83,7 +85,7 @@ const Home = () => {
       </section>
 
       {/* services */}
-      <section className=" pt-[80px] 2xl:h-[800px]">
+      <section>
         <div className="container">
           <div className="lg:w-[470px] mx-auto">
             <h2 className="heading text-center">

@@ -1,17 +1,12 @@
 import React from "react";
-import services from "./../assets/data/services";
-import ServiceCard from "./../Components/service/ServiceCard";
+// import Service from "../Components/service/ServiceList";
+import ServiceList from "../Components/service/ServiceList";
+// import ServiceCard from "./../Components/service/ServiceCard";
 
 const Service = () => {
   return (
-    <section>
-      <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-[30px]">
-          {services.map((item, index) => (
-            <ServiceCard item={item} index={index} key={index} />
-          ))}
-        </div>
-      </div>
+    <section className="pt-0">
+      <ServiceList />
     </section>
   );
 };
